@@ -1,21 +1,27 @@
 package com.example.week06.model;
 
 
+import com.example.week06.Dto.CommentRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@Getter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Comment {
+public class Comment extends Timestamped{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String Comment;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(name = "userid", nullable = false)
@@ -25,4 +31,7 @@ public class Comment {
     @JoinColumn(name = "postid", nullable = false)
     private Post post_id;
 
+    public void update(CommentRequestDto commentRequestDto){
+        this.comment = commentRequestDto.getComment();
+    }
 }
