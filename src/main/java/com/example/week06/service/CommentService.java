@@ -19,29 +19,30 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createComment(CommentRequestDto commentRequestDto, Long userId , Long postId){
+    public void createComment(CommentRequestDto commentRequestDto, String username, Long postId){
         String comments = commentRequestDto.getComment();
-        User user = userRepository.findById(userId).get;
-        Post post = postRepository.findById(postId).get;
+        User user = userRepository.findByUsername(username).get();
+        Post post = postRepository.findById(postId).get();
         Comment comment = new Comment(comments, user, post);
         commentRepository.save(comment);
     }
 
     @Transactional
-    public void deleteComment(Long commentId, Long userId){
-        User writerId = commentRepository.findById(commentId).orElseThrow(
-                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUser_id();
-        if (Objects.equals(writerId, userId)) {
+    public void deleteComment(Long commentId, String username){
+        User writername = commentRepository.findById(commentId).orElseThrow(
+                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUsername();
+        if (Objects.equals(writername, username)) {
             commentRepository.deleteById(commentId);
         }
     }
 
     @Transactional
     public void putComment(Long id, CommentRequestDto commentRequestDto, Long userId){
+
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
-        User user = userRepository.findById(userId).get;
-        if(Objects.equals(comment, userId)) {
+        User writerId = comment.getUser_id();
+        if(Objects.equals(writerId, userId)) {
             comment.update(commentRequestDto);
         }
     }
