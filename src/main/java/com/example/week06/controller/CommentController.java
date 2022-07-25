@@ -4,6 +4,7 @@ import com.example.week06.Dto.CommentRequestDto;
 import com.example.week06.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -13,17 +14,20 @@ public class CommentController {
 
     @PostMapping("/api/posts/{postId}/comments")
     public void createComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        commentService.createComment(commentRequestDto, postId, userDetails);
+        String username = userDetails.getUsername();
+        commentService.createComment(commentRequestDto, postId, username);
     }
 
     @DeleteMapping("/api/comments/{commentId}")
-    public String deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        commentService.deleteComment(commentId, userDetails);
+    public void deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String username = userDetails.getUsername();
+        commentService.deleteComment(commentId, username);
     }
 
     @PutMapping("/api/comments/{commentId}")
-    public String putComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        commentService.putComment(commentRequestDto, commentId);
+    public void putComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        String username = userDetails.getUsername();
+        commentService.putComment(commentId, commentRequestDto, username);
     }
 
 
