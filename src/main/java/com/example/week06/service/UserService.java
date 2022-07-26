@@ -22,6 +22,7 @@ public class UserService implements UserDetailsService {
     //회원가입 요청 처리
     public User createUser(SignupRequestDto signupRequestDto){
         User user = signupRequestDto.createUser();
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
