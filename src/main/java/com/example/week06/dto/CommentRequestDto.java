@@ -1,4 +1,4 @@
-package com.example.week06.Dto;
+package com.example.week06.dto;
 
 import lombok.Getter;
 import lombok.Setter;
