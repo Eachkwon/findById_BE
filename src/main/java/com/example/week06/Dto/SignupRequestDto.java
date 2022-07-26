@@ -1,14 +1,24 @@
 package com.example.week06.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.week06.model.User;
+import lombok.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class SignupRequestDto {
     private String email;
     private String nickname;
     private String password;
-    private String passwordChk;
 
+    public User createUser(){
+        return User.builder()
+                .email(this.email)
+                .nickname(this.nickname)
+                .password(this.password)
+                .authority(new SimpleGrantedAuthority("ROLE_USER"))
+                .build();
+    }
 }
