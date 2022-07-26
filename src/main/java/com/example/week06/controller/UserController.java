@@ -39,7 +39,7 @@ public class UserController {
     }
 
     //회원관련 정보 받기
-    @GetMapping("/user/userinfo")
+    @PostMapping("/user/userinfo")
     @ResponseBody
     public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         return ResponseEntity.ok(new UserInfoResponseDto(userDetailsImpl));
