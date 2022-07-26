@@ -1,27 +1,35 @@
 package com.example.week06.security;
 
+
+import com.example.week06.service.UserService;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-//커스터마이징 필요
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    BCryptPasswordEncoder encodePassword() {
-        return new BCryptPasswordEncoder();
+    private final UserService userService;
+
+    public WebSecurityConfig(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     public void configure(WebSecurity web) {
-        //h2 console 허용(CSRF, FrameOption 무시)
+        // h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
         web
                 .ignoring()
                 .antMatchers("/h2-console/**");
@@ -29,36 +37,46 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //회원 관리 처리 API (POST /user/**)에 대해 CSRF 무시
-        http.csrf()
-                .ignoringAntMatchers("/user/**");
-        http.authorizeRequests()
-                //image 폴더를 login 없이 허용
-                .antMatchers("/images/**").permitAll()
-                //css 폴더를 login 없이 허용
-                .antMatchers("/css/**").permitAll()
-                //회원 관리 처리 API 전부 login 없이 허용
-                .antMatchers("/user/**").permitAll()
-                .antMatchers((HttpMethod.GET)).permitAll()
-                //그 외 어떤 요청이든 '인증'
-                .anyRequest().authenticated()
+        JWTLoginFilter jwtLoginFilter = new JWTLoginFilter(authenticationManager());
+        JWTCheckFilter jwtCheckFilter = new JWTCheckFilter(authenticationManager(), userService);
+
+        http
+                .csrf().disable()
+                .cors().configurationSource(corsConfigurationSource())
                 .and()
-                // [로그인 기능]
-                .formLogin()
-                //로그인 View 제공(GET /user/login)
-                .loginPage("/user/login")
-                //로그인 처리(POST /user/login)
-                .loginProcessingUrl("/user/login")
-                //로그인 처리 후 성공 시 URL
-                .defaultSuccessUrl("/")
-                //로그인 처리 후 실패 시 URL
-                .failureUrl("/user/login?error")
-                .permitAll()
+                    //JWT 인증 사용위해 Session 생성 막기
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                // [로그아웃 기능]
-                .logout()
-                //로그아웃 처리 URL
-                .logoutUrl("/user/logout")
-                .permitAll();
+                    .authorizeRequests()
+                    // Preflight Request 허용해주기
+                    .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .antMatchers("/api/**").hasAnyAuthority()
+                    .antMatchers("/user/**").permitAll()
+                    .antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
+                    .anyRequest().permitAll()
+                .and()
+                    .httpBasic()
+                .and()
+                    //서버에 접근시 JWT 확인 후 인증 실시
+                    .addFilterAt(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                    .addFilterAt(jwtCheckFilter, BasicAuthenticationFilter.class)
+        ;
     }
+
+    //CORS 허용정책
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }
