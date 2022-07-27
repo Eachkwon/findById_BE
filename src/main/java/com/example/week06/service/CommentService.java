@@ -1,6 +1,6 @@
 package com.example.week06.service;
 
-import com.example.week06.Dto.CommentRequestDto;
+import com.example.week06.dto.CommentRequestDto;
 import com.example.week06.model.Comment;
 import com.example.week06.model.Post;
 import com.example.week06.model.User;

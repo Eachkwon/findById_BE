@@ -1,14 +1,12 @@
 package com.example.week06.model;
 
 
-import com.example.week06.Dto.CommentRequestDto;
+import com.example.week06.dto.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -24,11 +22,11 @@ public class Comment extends Timestamped{
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "userid", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user_id;
 
     @ManyToOne
-    @JoinColumn(name = "postid", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post_id;
 
     public Comment(CommentRequestDto commentRequestDto, User user_id, Post post_id){

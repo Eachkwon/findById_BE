@@ -1,11 +1,11 @@
 package com.example.week06.controller;
 
-import com.example.week06.Dto.CommentRequestDto;
+
+import com.example.week06.dto.CommentRequestDto;
 import com.example.week06.security.UserDetailsImpl;
 import com.example.week06.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -25,7 +25,7 @@ public class CommentController {
         commentService.deleteComment(commentId, email);
     }
 
-    @PutMapping("/api/comments/{commentId}")
+    @PatchMapping("/api/comments/{commentId}")
     public void putComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String email = userDetails.getUsername();
         commentService.putComment(commentId, commentRequestDto, email);

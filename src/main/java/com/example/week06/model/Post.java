@@ -1,29 +1,25 @@
 package com.example.week06.model;
 
-import com.example.week06.Dto.PostRequestDto;
-import lombok.AllArgsConstructor;
+import com.example.week06.dto.PostRequestDto;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 
-@Table(name = "POST")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 public class Post extends Timestamped {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "post_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id", nullable = false)
     private Long id;
 
     @Column(length = 40, nullable = false)
@@ -32,17 +28,25 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    @Column
-    private String imageURL;
-
     @Column(nullable = false)
-    private boolean odagada;
+    private boolean gadaoda;
 
     @Column
     private boolean completed;
 
     @Column(nullable = false)
     private DistrictEnum district;
+
+//    @Column(nullable = false)
+//    private String fileName;
+//
+//    @Column(nullable = false)
+//    private String filePath;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     //게시글을 삭제하면 달려있는 댓글 모두 삭제
     @OneToMany(mappedBy = "post_id", cascade = ALL, orphanRemoval = true)
@@ -53,23 +57,46 @@ public class Post extends Timestamped {
         comments.add(comment);
     }
 
-    // 게시글 수정
-    public void updateTitle(String title) {
-        this.title = title;
-    }
-
-    public void updateContents(String content) {
-        this.content = content;
-    }
-
-    public void updateImageURL(String imageURL) { this.imageURL = imageURL; }
-
-    public Post(PostRequestDto requestDto, Long userId) {
+    public Post(PostRequestDto requestDto, String fileName, String filePath) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.imageURL = requestDto.getImageURL();
-        this.odagada = requestDto.isOdagada();
-        this.district = requestDto.getDistrict();
+//        setUser(user);
+    }
+
+//    public void setUser(User user) {
+//        this.user = user;
+//        user.getPosts().add(this);
+//    }
+
+    @Builder
+    public Post(String title, String content, boolean gadaoda, boolean completed, DistrictEnum district) {
+        this.title = title;
+        this.content = content;
+        this.gadaoda = gadaoda;
+        this.completed = completed;
+        this.district = district;
+//        this.user = user;
+//        setUser(user);
+    }
+
+    public static Post createPost(Post post) {
+        return Post.builder()
+//                .user(user)
+                .title(post.getTitle())
+                .content(post.getContent())
+                .gadaoda(post.isGadaoda())
+                .completed(post.isCompleted())
+                .district(post.getDistrict())
+                .build();
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user_id;
+
+    public Post(Long id, User user_Id){
+        this.id = id;
+        this.user_id = user_Id;
     }
 
 }
