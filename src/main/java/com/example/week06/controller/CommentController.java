@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 public class CommentController {
+
     private final CommentService commentService;
+
 
     @PostMapping("/api/posts/{postId}/comments")
     public void createComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -24,7 +26,7 @@ public class CommentController {
         commentService.deleteComment(commentId, email);
     }
 
-    @PatchMapping("/api/comments/{commentId}")
+    @PutMapping("/api/comments/{commentId}")
     public void putComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String email = userDetails.getUsername();
         commentService.putComment(commentId, commentRequestDto, email);

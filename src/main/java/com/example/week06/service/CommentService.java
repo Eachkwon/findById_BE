@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Objects;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
 
     @Transactional
     public void createComment(CommentRequestDto commentRequestDto, String email, Long postId){
@@ -31,7 +33,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId, String email){
         User writername = commentRepository.findById(commentId).orElseThrow(
-                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUser_id();
+                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUser();
         String writeremail = writername.getEmail();
         if (Objects.equals(writeremail, email)) {
             commentRepository.deleteById(commentId);
@@ -44,7 +46,7 @@ public class CommentService {
                 ()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
         User writername = commentRepository.findById(commentId).orElseThrow(
-                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUser_id();
+                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUser();
         String writeremail = writername.getEmail();
 
         if(Objects.equals(writeremail, email)) {

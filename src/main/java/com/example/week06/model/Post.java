@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -29,13 +28,13 @@ public class Post extends Timestamped {
     private String content;
 
     @Column(nullable = false)
-    private boolean gadaoda;
+    private String gadaoda;
 
     @Column
-    private boolean completed;
+    private String completed = "uncompleted";
 
     @Column(nullable = false)
-    private DistrictEnum district;
+    private String district;
 
 //    @Column(nullable = false)
 //    private String fileName;
@@ -49,8 +48,9 @@ public class Post extends Timestamped {
     private User user;
 
     //게시글을 삭제하면 달려있는 댓글 모두 삭제
-    @OneToMany(mappedBy = "post_id", cascade = ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
 
     //연관 관계
     public void addComment(Comment comment) {
@@ -70,7 +70,7 @@ public class Post extends Timestamped {
 //    }
 
     @Builder
-    public Post(String title, String content, boolean gadaoda, boolean completed, DistrictEnum district) {
+    public Post(String title, String content, String gadaoda, String completed, User user) {
         this.title = title;
         this.content = content;
         this.gadaoda = gadaoda;
@@ -80,19 +80,18 @@ public class Post extends Timestamped {
 //        setUser(user);
     }
 
-    public static Post createPost(Post post) {
-        return Post.builder()
-//                .user(user)
-                .title(post.getTitle())
-                .content(post.getContent())
-                .gadaoda(post.isGadaoda())
-                .completed(post.isCompleted())
-                .district(post.getDistrict())
-                .build();
-    }
+//    public static Post createPost(Post post, MultipartFile file, Long userId) {
+//        return Post.builder()
+//                .title(post.getTitle())
+//                .content(post.getContent())
+//                .gadaoda(post.getGadaoda())
+//                .completed(post.getCompleted())
+//                .district(post.getDistrict())
+//                .build();
+//    }
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     private User user_id;
 
     public Post(Long id, User user_Id){
