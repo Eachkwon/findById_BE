@@ -23,16 +23,16 @@ public class Comment extends Timestamped{
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user_id;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
-    private Post post_id;
+    private Post post;
 
-    public Comment(CommentRequestDto commentRequestDto, User user_id, Post post_id){
+    public Comment(CommentRequestDto commentRequestDto, User user, Post post){
         this.comment = commentRequestDto.getComment();
-        this.user_id = user_id;
-        this.post_id = post_id;
+        this.user = user;
+        this.post = post;
     }
 
 

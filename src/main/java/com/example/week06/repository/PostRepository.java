@@ -1,17 +1,16 @@
 package com.example.week06.repository;
 
 import com.example.week06.model.Post;
-import com.example.week06.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByUser(User user);
-    Optional<Post> findById(Long postid);
-    Optional<Post> findByPostIdAndUserId(Long postid, User user_Id);
-    Optional<Post> deleteByPostIdAndUserId(Long postid, User user_Id);
+    Optional<Post> findById(Long postId);
+    Optional<Post> findByPostIdAndUserId(Long postId, Long userId);
+    Optional<Post> deleteByPostIdAndUserId(Long postId, Long userId);
 
 }
