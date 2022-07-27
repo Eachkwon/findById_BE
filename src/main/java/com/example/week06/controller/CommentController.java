@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 public class CommentController {
+
     private final CommentService commentService;
+
 
     @PostMapping("/api/posts/{postId}/comments")
     public void createComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){

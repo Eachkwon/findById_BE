@@ -1,31 +1,27 @@
 package com.example.week06.dto;
 
-import com.example.week06.model.DistrictEnum;
-import com.example.week06.model.Post;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PostRequestDto {
 
     private String title;
-    private String imageURL;
-    private DistrictEnum district;
-    private boolean gadaoda;
     private String content;
+    private String gadaoda;
+    private String district;
 
-    public Post toEntity() {
-        return Post.builder()
+
+
+    public PostRequestDto toEntity() {
+        return PostRequestDto.builder()
                 .title(title)
                 .content(content)
-                .district(district)
                 .gadaoda(gadaoda)
-                .content(content)
+                .district(district)
                 .build();
     }
 
