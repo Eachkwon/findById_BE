@@ -1,6 +1,7 @@
 package com.example.week06.model;
 
 import com.example.week06.dto.PostRequestDto;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-
 
 @Getter
 @NoArgsConstructor
@@ -56,7 +56,6 @@ public class Post extends Timestamped {
     public void addComment(Comment comment) {
         comments.add(comment);
     }
-
 
     public Post(PostRequestDto requestDto, String fileName, String filePath) {
         this.title = requestDto.getTitle();
