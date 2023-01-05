@@ -2,26 +2,22 @@ package com.example.week06.security;
 
 import com.example.week06.model.User;
 import com.example.week06.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public UserDetails loadUserByUsername(String email) throws IllegalArgumentException {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException()
-        );
-
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("이메일을 찾을 수 없습니다"));
         return new UserDetailsImpl(user);
     }
 }

@@ -1,16 +1,12 @@
 package com.example.week06.security;
 
 import com.example.week06.model.User;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Getter
-@Setter
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;

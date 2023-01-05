@@ -23,7 +23,7 @@ public class UserController {
     }
 
     //이메일 중복 체크
-    @GetMapping("/user/{email}")
+    @GetMapping("/user/email/{email}")
     public ResponseEntity<Void> emailChk( @PathVariable String email ){
         Boolean emailChk = userService.emailChk(email);
         if(emailChk) { throw new IllegalArgumentException("이미 존재하는 이메일입니다."); }
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     //닉네임 중복 체크
-    @GetMapping("/user/{nickname}")
+    @GetMapping("/user/nickname/{nickname}")
     public ResponseEntity<Void> nicknameChk(@PathVariable String nickname) {
         Boolean nicknameChk = userService.nicknameChk(nickname);
         if(nicknameChk) { throw new IllegalArgumentException("이미 존재하는 닉네임입니다."); }
