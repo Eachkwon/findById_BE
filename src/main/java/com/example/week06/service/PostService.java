@@ -58,7 +58,7 @@ public class PostService {
     @Transactional
     public void createPost(UserDetailsImpl userDetails, PostRequestDto requestDto, MultipartFile file) throws IOException {
 
-        String email = userDetails.getUser().getEmail();
+        String email = userDetails.getUsername();
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new NullPointerException("유저 정보를 찾을 수 없습니다.")
         );
@@ -79,7 +79,7 @@ public class PostService {
 
     //게시글 수정
     @Transactional
-    public ResponseMessageDto updatePost(PostRequestDto requestDto, Long postId, MultipartFile file) throws Exception {
+    public ResponseMessageDto updatePost(PostRequestDto requestDto, Long postId, MultipartFile file) {
 
         ResponseMessageDto responseMessageDto = new ResponseMessageDto();
         responseMessageDto.setStatus(true);
@@ -112,11 +112,13 @@ public class PostService {
         //코멘트 가져오기
         List<Comment> comments = commentRepository.findByPostOrderByCreatedAtDesc(post);
 
+        User user = userDetails.getUser();
+
         PostDetailsResponseDto postDetailsResponseDto = PostDetailsResponseDto.builder()
                 .postId(postId)
                 .title(post.getTitle())
                 .imageURL(imageURL)
-                .nickname(userDetails.getNickname())
+                .nickname(user.getNickname())
                 .district(post.getDistrict())
                 .content(post.getContent())
                 .gadaoda(post.getGadaoda())
@@ -130,17 +132,20 @@ public class PostService {
 
     //완료 처리(completed)
     @Transactional
-    public boolean complete(Long postId, Long userId) {
+    public boolean complete(Long postId, UserDetailsImpl userDetails) {
         Long post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")).getId();
-        User user = userRepository.getById(userId);
-        Optional<Post> complete = postRepository.findByPostIdAndUserId(post, user.getId());
+        String email = userDetails.getUsername();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 아이디입니다.")
+        );
+        Optional<Post> complete = postRepository.findByPostIdAndUser(post, user);
         if (!complete.isPresent()) {
             Post completed = new Post(post, user);
             postRepository.save(completed);
             return false;
         } else {
-            postRepository.deleteByPostIdAndUserId(post, user.getId());
+            postRepository.deleteByPostIdAndUser(post, user);
             return true;
         }
     }

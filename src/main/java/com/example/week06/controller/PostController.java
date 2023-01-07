@@ -54,8 +54,7 @@ public class PostController {
 
     @PostMapping("/api/posts/{postId}/completed")
     public void complete(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        Long LongId = userDetails.getUser().getId();
-        postService.complete(postId, LongId);
+        postService.complete(postId, userDetails);
     }
 }
 
