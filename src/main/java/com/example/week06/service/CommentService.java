@@ -21,7 +21,6 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-
     @Transactional
     public void createComment(CommentRequestDto commentRequestDto, String email, Long postId){
         User user = userRepository.findByEmail(email).get();
@@ -32,12 +31,15 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long commentId, String email){
-        User writername = commentRepository.findById(commentId).orElseThrow(
-                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUser();
-        String writeremail = writername.getEmail();
-        if (Objects.equals(writeremail, email)) {
-            commentRepository.deleteById(commentId);
-        }
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+        );
+
+        commentRepository.findByIdAndUser(commentId, user).orElseThrow(
+                () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+        );
+
+        commentRepository.deleteById(commentId);
     }
 
     @Transactional
@@ -45,13 +47,9 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 ()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
-        User writername = commentRepository.findById(commentId).orElseThrow(
-                ()-> new IllegalArgumentException("댓글이 존재하지 않습니다.")).getUser();
-        String writeremail = writername.getEmail();
+        User writer = comment.getUser();
 
-        if(Objects.equals(writeremail, email)) {
-            comment.update(commentRequestDto);
-        }
+
     }
 
 }

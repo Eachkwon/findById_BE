@@ -4,13 +4,14 @@ package com.example.week06.model;
 import com.example.week06.dto.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Entity
 public class Comment extends Timestamped{
 
