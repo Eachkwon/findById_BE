@@ -1,5 +1,6 @@
 package com.example.week06.dto;
 
+import com.example.week06.model.User;
 import com.example.week06.security.UserDetailsImpl;
 import lombok.*;
 
@@ -12,8 +13,10 @@ public class UserInfoResponseDto {
     private String email;
     private String nickname;
 
-    public UserInfoResponseDto(UserDetailsImpl userDetailsImpl){
-        this.email = userDetailsImpl.getUsername();
-        this.nickname = userDetailsImpl.getNickname();
+    public UserInfoResponseDto(UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+
+        this.email = user.getEmail();
+        this.nickname = user.getNickname();
     }
 }

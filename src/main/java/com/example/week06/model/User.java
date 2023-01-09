@@ -5,10 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @Builder
+@Getter
 @NoArgsConstructor
 @Entity
 public class User {
@@ -21,5 +20,10 @@ public class User {
     private String nickname;
     private String password;
     private GrantedAuthority authority;
+
+    public void setPassword(String password){
+        this.password = password;
+    }
+
 
 }
