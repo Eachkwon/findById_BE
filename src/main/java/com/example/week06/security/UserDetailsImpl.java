@@ -4,21 +4,32 @@ import com.example.week06.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
-    public UserDetailsImpl(User user){ this.user = user;}
 
-    public String getNickname() { return user.getNickname(); }
+    public UserDetailsImpl(User user) {
+        this.user = user;
+    }
+
+    public User getUser() { return user; }
 
     @Override
-    public String getUsername() { return user.getEmail(); }
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
 
     @Override
-    public String getPassword() { return user.getPassword(); }
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() { return user.getEmail();
+    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -39,13 +50,5 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(user.getAuthority());
-
-        return authorities;
-    }
-
 }
+
