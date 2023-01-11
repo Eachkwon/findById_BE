@@ -1,4 +1,4 @@
-package com.example.week06.security;
+package com.example.week06.global.security;
 
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;

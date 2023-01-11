@@ -1,4 +1,4 @@
-package com.example.week06.security;
+package com.example.week06.global.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Date;
 import java.util.Optional;
 
-import static com.example.week06.security.JwtTokenUtils.*;
+import static com.example.week06.global.security.JwtTokenUtils.*;
 
 @Component
 public class JwtDecoder {
