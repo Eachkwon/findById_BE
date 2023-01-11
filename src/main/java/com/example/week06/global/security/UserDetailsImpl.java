@@ -1,4 +1,4 @@
-package com.example.week06.security;
+package com.example.week06.global.security;
 
 import com.example.week06.model.User;
 import org.springframework.security.core.GrantedAuthority;

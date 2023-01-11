@@ -1,9 +1,8 @@
-package com.example.week06.security;
+package com.example.week06.global.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import java.time.Instant;
 import java.util.Date;
 
 public final class JwtTokenUtils {
