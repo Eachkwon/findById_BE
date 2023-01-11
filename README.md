@@ -5,9 +5,13 @@
 ## 📢프로젝트 소개
 **대구광역시 내의 유실물을 등록하여 서로 공유할 수 있는 커뮤니티입니다.**
 
+<br/>
+
 ## 👨‍👩‍👧‍👦팀원 소개
 - FE: 김종현, 박지민, 안동규
 - BE: 권유경(L), 박태웅, 방기웅
+
+<br/>
 
 ## 💡주요기능
 
@@ -40,6 +44,8 @@
 <img src="https://img.shields.io/badge/SpringSecurity-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white">
 <img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=for-the-badge&logo=JSON Web Tokens&logoColor=white">
 </div>
+
+<br/>
 
 ### DevOps.
 <div style="display: flex">
