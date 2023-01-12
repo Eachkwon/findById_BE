@@ -1,7 +1,7 @@
-package com.example.week06.repository;
+package com.example.week06.global;
 
-import com.example.week06.model.Attachment;
-import com.example.week06.model.Post;
+import com.example.week06.global.Attachment;
+import com.example.week06.domain.community.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

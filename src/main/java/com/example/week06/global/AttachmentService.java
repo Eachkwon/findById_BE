@@ -1,10 +1,7 @@
-package com.example.week06.service;
+package com.example.week06.global;
 
 
-import com.example.week06.dto.UploadFile;
-import com.example.week06.model.Attachment;
-import com.example.week06.model.Post;
-import com.example.week06.repository.AttachmentRepository;
+import com.example.week06.domain.community.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

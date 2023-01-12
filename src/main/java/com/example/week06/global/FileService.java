@@ -1,6 +1,6 @@
-package com.example.week06.service;
+package com.example.week06.global;
 
-import com.example.week06.dto.UploadFile;
+import com.example.week06.global.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

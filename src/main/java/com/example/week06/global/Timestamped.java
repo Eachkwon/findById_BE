@@ -1,4 +1,4 @@
-package com.example.week06.model;
+package com.example.week06.global;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

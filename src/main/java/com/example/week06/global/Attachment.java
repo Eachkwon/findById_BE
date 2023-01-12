@@ -1,5 +1,6 @@
-package com.example.week06.model;
+package com.example.week06.global;
 
+import com.example.week06.domain.community.entity.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
