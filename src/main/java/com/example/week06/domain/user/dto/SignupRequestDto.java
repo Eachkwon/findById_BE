@@ -1,6 +1,6 @@
-package com.example.week06.dto;
+package com.example.week06.domain.user.dto;
 
-import com.example.week06.model.User;
+import com.example.week06.domain.user.entity.User;
 import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

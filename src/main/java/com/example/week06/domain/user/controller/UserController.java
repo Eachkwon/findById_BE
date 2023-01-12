@@ -1,9 +1,9 @@
-package com.example.week06.controller;
+package com.example.week06.domain.user.controller;
 
-import com.example.week06.dto.UserInfoResponseDto;
-import com.example.week06.dto.SignupRequestDto;
-import com.example.week06.security.UserDetailsImpl;
-import com.example.week06.service.UserService;
+import com.example.week06.domain.user.dto.UserInfoResponseDto;
+import com.example.week06.domain.user.dto.SignupRequestDto;
+import com.example.week06.global.security.UserDetailsImpl;
+import com.example.week06.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

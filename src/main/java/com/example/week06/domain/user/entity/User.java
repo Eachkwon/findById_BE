@@ -1,4 +1,4 @@
-package com.example.week06.model;
+package com.example.week06.domain.user.entity;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
