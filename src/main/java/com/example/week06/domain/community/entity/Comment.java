@@ -1,9 +1,10 @@
-package com.example.week06.model;
+package com.example.week06.domain.community.entity;
 
 
-import com.example.week06.dto.CommentRequestDto;
+import com.example.week06.domain.community.dto.CommentRequestDto;
+import com.example.week06.global.Timestamped;
+import com.example.week06.domain.user.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Entity
-public class Comment extends Timestamped{
+public class Comment extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,4 +1,4 @@
-package com.example.week06.dto;
+package com.example.week06.domain.community.dto;
 
 import lombok.*;
 

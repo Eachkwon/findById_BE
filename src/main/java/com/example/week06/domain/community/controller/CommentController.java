@@ -1,9 +1,9 @@
-package com.example.week06.controller;
+package com.example.week06.domain.community.controller;
 
 
-import com.example.week06.dto.CommentRequestDto;
-import com.example.week06.security.UserDetailsImpl;
-import com.example.week06.service.CommentService;
+import com.example.week06.domain.community.dto.CommentRequestDto;
+import com.example.week06.global.security.UserDetailsImpl;
+import com.example.week06.domain.community.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

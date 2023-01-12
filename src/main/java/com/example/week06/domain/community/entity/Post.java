@@ -1,7 +1,9 @@
-package com.example.week06.model;
+package com.example.week06.domain.community.entity;
 
-import com.example.week06.dto.PostRequestDto;
+import com.example.week06.domain.community.dto.PostRequestDto;
 
+import com.example.week06.global.Timestamped;
+import com.example.week06.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

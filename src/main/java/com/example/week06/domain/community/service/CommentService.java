@@ -1,17 +1,16 @@
-package com.example.week06.service;
+package com.example.week06.domain.community.service;
 
-import com.example.week06.dto.CommentRequestDto;
-import com.example.week06.model.Comment;
-import com.example.week06.model.Post;
-import com.example.week06.model.User;
-import com.example.week06.repository.CommentRepository;
-import com.example.week06.repository.PostRepository;
-import com.example.week06.repository.UserRepository;
+import com.example.week06.domain.community.dto.CommentRequestDto;
+import com.example.week06.domain.community.entity.Comment;
+import com.example.week06.domain.community.entity.Post;
+import com.example.week06.domain.user.entity.User;
+import com.example.week06.domain.community.repository.CommentRepository;
+import com.example.week06.domain.community.repository.PostRepository;
+import com.example.week06.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Objects;
 
 
 @Service

@@ -1,7 +1,7 @@
-package com.example.week06.dto;
+package com.example.week06.domain.community.dto;
 
 
-import com.example.week06.model.Comment;
+import com.example.week06.domain.community.entity.Comment;
 import lombok.*;
 
 import java.util.List;

@@ -1,10 +1,10 @@
-package com.example.week06.controller;
+package com.example.week06.domain.community.controller;
 
-import com.example.week06.dto.PostDetailsResponseDto;
-import com.example.week06.dto.PostRequestDto;
-import com.example.week06.dto.PostResponseDto;
-import com.example.week06.security.UserDetailsImpl;
-import com.example.week06.service.PostService;
+import com.example.week06.domain.community.dto.PostDetailsResponseDto;
+import com.example.week06.domain.community.dto.PostRequestDto;
+import com.example.week06.domain.community.dto.PostResponseDto;
+import com.example.week06.global.security.UserDetailsImpl;
+import com.example.week06.domain.community.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
