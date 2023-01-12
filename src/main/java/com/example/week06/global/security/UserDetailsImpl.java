@@ -1,6 +1,6 @@
 package com.example.week06.global.security;
 
-import com.example.week06.model.User;
+import com.example.week06.domain.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -1,7 +1,7 @@
 package com.example.week06.global.security;
 
-import com.example.week06.model.User;
-import com.example.week06.repository.UserRepository;
+import com.example.week06.domain.user.entity.User;
+import com.example.week06.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
