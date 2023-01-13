@@ -8,14 +8,11 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class UserInfoResponseDto {
+public class MypageResponse {
     private String email;
     private String nickname;
 
-    public UserInfoResponseDto(UserDetailsImpl userDetails){
-        User user = userDetails.getUser();
-
+    public MypageResponse(User user){
         this.email = user.getEmail();
         this.nickname = user.getNickname();
     }
