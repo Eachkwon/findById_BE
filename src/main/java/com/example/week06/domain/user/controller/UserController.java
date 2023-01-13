@@ -1,13 +1,14 @@
 package com.example.week06.domain.user.controller;
 
-import com.example.week06.domain.user.dto.UserInfoResponseDto;
-import com.example.week06.domain.user.dto.SignupRequestDto;
+import com.example.week06.domain.user.dto.SignupRequest;
 import com.example.week06.global.security.UserDetailsImpl;
 import com.example.week06.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,34 +17,28 @@ public class UserController {
     private final UserService userService;
 
     //회원가입 요청 처리
-    @PostMapping("/user/signup")
-    public ResponseEntity<Void> signup( @RequestBody SignupRequestDto signupRequestDto ){
-        userService.createUser(signupRequestDto);
+    @PostMapping("/api/signup")
+    public ResponseEntity<Void> signup( @RequestBody SignupRequest signupRequest){
+        userService.signup(signupRequest);
         return ResponseEntity.ok().build();
     }
 
     //이메일 중복 체크
-    @GetMapping("/user/email/{email}")
-    public ResponseEntity<Void> emailChk( @PathVariable String email ){
-        Boolean emailChk = userService.emailChk(email);
-        if(emailChk) { throw new IllegalArgumentException("이미 존재하는 이메일입니다."); }
-        return ResponseEntity.ok().build();
+    @PostMapping("/api/email-check")
+    public ResponseEntity<?> emailChk(@RequestBody Map<String,String> map ){
+        return ResponseEntity.ok(userService.emailChk(map.get("email")));
     }
 
     //닉네임 중복 체크
-    @GetMapping("/user/nickname/{nickname}")
-    public ResponseEntity<Void> nicknameChk(@PathVariable String nickname) {
-        Boolean nicknameChk = userService.nicknameChk(nickname);
-        if(nicknameChk) { throw new IllegalArgumentException("이미 존재하는 닉네임입니다."); }
-        return ResponseEntity.ok().build();
+    @PostMapping("/user/nickname-check")
+    public ResponseEntity<?> nicknameChk(@RequestBody Map<String, String> map) {
+        return ResponseEntity.ok(userService.nicknameChk(map.get("nickname")));
     }
 
     //회원관련 정보 받기
-    @PostMapping("/user/userinfo")
-    @ResponseBody
-    public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
-        return ResponseEntity.ok(new UserInfoResponseDto(userDetailsImpl));
+    @GetMapping("/api/mypage")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.ok(userService.getUserInfo(userDetails.getUser()));
     }
-
 
 }

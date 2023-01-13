@@ -17,13 +17,23 @@ public class User {
     private Long id;
     @Column(unique = true)
     private String email;
+
+    @Column(unique = true)
     private String nickname;
+
+    @Column
     private String password;
-    private GrantedAuthority authority;
+
+    public User(String email, String nickname, String password) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+    }
 
     public void setPassword(String password){
         this.password = password;
     }
 
+    public void setNickname(String nickname) { this.nickname = nickname; }
 
 }

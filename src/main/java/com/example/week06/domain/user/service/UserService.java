@@ -1,47 +1,49 @@
 package com.example.week06.domain.user.service;
 
-import com.example.week06.domain.user.dto.SignupRequestDto;
+import com.example.week06.domain.user.dto.CheckResponse;
+import com.example.week06.domain.user.dto.MypageResponse;
+import com.example.week06.domain.user.dto.SignupRequest;
 import com.example.week06.domain.user.entity.User;
 import com.example.week06.domain.user.repository.UserRepository;
-import com.example.week06.global.security.UserDetailsImpl;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserDetailsService {
+@RequiredArgsConstructor
+public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     //회원가입 요청 처리
-    public User createUser(SignupRequestDto signupRequestDto){
-        User user = signupRequestDto.createUser();
+    public void signup(SignupRequest signupRequest){
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
+        String email = signupRequest.getEmail();
+        String nickname = signupRequest.getNickname();
+        String password = signupRequest.getPassword();
 
-    @Override
-    public UserDetailsImpl loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                ()->new UsernameNotFoundException("Can't find " + email));
-        return new UserDetailsImpl(user);
+        String encodedPassword = passwordEncoder.encode(password);
+        userRepository.save(new User(email, nickname, encodedPassword));
     }
 
     //이메일 중복체크
-    public Boolean emailChk(String email) throws UsernameNotFoundException {
-        return userRepository.existsByEmail(email);
+    public CheckResponse emailChk(String email) {
+        if(userRepository.findByEmail(email).isPresent()) {
+            return new CheckResponse(false);
+        }
+        return new CheckResponse(true);
     }
 
     //닉네임 중복체크
-    public Boolean nicknameChk(String nickname) throws IllegalArgumentException {
-        return userRepository.existsByNickname(nickname);
+    public CheckResponse nicknameChk(String nickname) {
+        if(userRepository.findByNickname(nickname).isPresent()) {
+            return new CheckResponse(false);
+        }
+        return new CheckResponse(true);
+    }
+
+    public MypageResponse getUserInfo(User user) {
+        return new MypageResponse(user);
     }
 
 
