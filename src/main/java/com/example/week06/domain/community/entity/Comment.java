@@ -1,7 +1,6 @@
 package com.example.week06.domain.community.entity;
 
 
-import com.example.week06.domain.community.dto.CommentRequest;
 import com.example.week06.global.Timestamped;
 import com.example.week06.domain.user.entity.User;
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class Comment extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String comment;
+    private String content;
 
     @ManyToOne
     private User user;
@@ -26,14 +25,14 @@ public class Comment extends Timestamped {
     @ManyToOne
     private Post post;
 
-    public Comment(CommentRequest commentRequest, User user, Post post){
-        this.comment = commentRequest.getComment();
+    public Comment(String content, User user, Post post){
+        this.content = content;
         this.user = user;
         this.post = post;
     }
 
 
-    public void update(CommentRequest commentRequest){
-        this.comment = commentRequest.getComment();
+    public void update(String content){
+        this.content = content;
     }
 }

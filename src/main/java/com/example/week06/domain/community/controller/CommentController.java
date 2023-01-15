@@ -1,7 +1,6 @@
 package com.example.week06.domain.community.controller;
 
 
-import com.example.week06.domain.community.dto.CommentRequest;
 import com.example.week06.global.security.UserDetailsImpl;
 import com.example.week06.domain.community.service.CommentService;
 import lombok.RequiredArgsConstructor;
