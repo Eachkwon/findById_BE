@@ -1,7 +1,7 @@
 package com.example.week06.domain.community.entity;
 
 
-import com.example.week06.domain.community.dto.CommentRequestDto;
+import com.example.week06.domain.community.dto.CommentRequest;
 import com.example.week06.global.Timestamped;
 import com.example.week06.domain.user.entity.User;
 import lombok.Getter;
@@ -26,14 +26,14 @@ public class Comment extends Timestamped {
     @ManyToOne
     private Post post;
 
-    public Comment(CommentRequestDto commentRequestDto, User user, Post post){
-        this.comment = commentRequestDto.getComment();
+    public Comment(CommentRequest commentRequest, User user, Post post){
+        this.comment = commentRequest.getComment();
         this.user = user;
         this.post = post;
     }
 
 
-    public void update(CommentRequestDto commentRequestDto){
-        this.comment = commentRequestDto.getComment();
+    public void update(CommentRequest commentRequest){
+        this.comment = commentRequest.getComment();
     }
 }

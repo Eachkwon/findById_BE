@@ -1,7 +1,7 @@
 package com.example.week06.domain.community.controller;
 
 
-import com.example.week06.domain.community.dto.CommentRequestDto;
+import com.example.week06.domain.community.dto.CommentRequest;
 import com.example.week06.global.security.UserDetailsImpl;
 import com.example.week06.domain.community.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ public class CommentController {
 
 
     @PostMapping("/api/posts/{postId}/comments")
-    public void createComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public void createComment(@RequestBody CommentRequest commentRequest, @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String email = userDetails.getUsername();
-        commentService.createComment(commentRequestDto, email, postId);
+        commentService.createComment(commentRequest, email, postId);
     }
 
     @DeleteMapping("/api/comments/{commentId}")
@@ -28,9 +28,9 @@ public class CommentController {
     }
 
     @PutMapping("/api/comments/{commentId}")
-    public void putComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public void putComment(@PathVariable Long commentId, @RequestBody CommentRequest commentRequest, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String email = userDetails.getUsername();
-        commentService.putComment(commentId, commentRequestDto, email);
+        commentService.putComment(commentId, commentRequest, email);
     }
 
 

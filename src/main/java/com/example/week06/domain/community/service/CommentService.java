@@ -1,6 +1,6 @@
 package com.example.week06.domain.community.service;
 
-import com.example.week06.domain.community.dto.CommentRequestDto;
+import com.example.week06.domain.community.dto.CommentRequest;
 import com.example.week06.domain.community.entity.Comment;
 import com.example.week06.domain.community.entity.Post;
 import com.example.week06.domain.user.entity.User;
@@ -21,10 +21,10 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createComment(CommentRequestDto commentRequestDto, String email, Long postId){
+    public void createComment(CommentRequest commentRequest, String email, Long postId){
         User user = userRepository.findByEmail(email).get();
         Post post = postRepository.findById(postId).get();
-        Comment comment = new Comment(commentRequestDto, user, post);
+        Comment comment = new Comment(commentRequest, user, post);
         commentRepository.save(comment);
     }
 
@@ -42,7 +42,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void putComment(Long commentId, CommentRequestDto commentRequestDto, String email){
+    public void putComment(Long commentId, CommentRequest commentRequest, String email){
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 ()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
