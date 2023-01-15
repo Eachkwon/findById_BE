@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostResponseDto {
+public class PostResponse {
 
     private Long postId;
     private String title;

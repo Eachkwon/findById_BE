@@ -1,9 +1,9 @@
 package com.example.week06.domain.community.service;
 
-import com.example.week06.domain.community.dto.PostDetailsResponseDto;
-import com.example.week06.domain.community.dto.PostRequestDto;
-import com.example.week06.domain.community.dto.PostResponseDto;
-import com.example.week06.domain.community.dto.ResponseMessageDto;
+import com.example.week06.domain.community.dto.PostDetailsResponse;
+import com.example.week06.domain.community.dto.PostRequest;
+import com.example.week06.domain.community.dto.PostResponse;
+import com.example.week06.domain.community.dto.ResponseMessage;
 import com.example.week06.domain.community.entity.Comment;
 import com.example.week06.domain.community.entity.Post;
 import com.example.week06.domain.user.entity.User;
@@ -37,27 +37,27 @@ public class PostService {
 
     //전체 게시글 조회
     @Transactional
-    public List<PostResponseDto> getPosts() {
+    public List<PostResponse> getPosts() {
 
         List<Post> posts = postRepository.findAll();
-        List<PostResponseDto> postList = new ArrayList<>();
+        List<PostResponse> postList = new ArrayList<>();
 
         for (Post post : posts) {
-            PostResponseDto postResponseDto = PostResponseDto.builder()
+            PostResponse postResponse = PostResponse.builder()
                     .postId(post.getId())
                     .title(post.getTitle())
                     .district(post.getDistrict())
                     .imageURL(attachmentRepository.findByPost(post).getImageURL())
                     .build();
 
-            postList.add(postResponseDto);
+            postList.add(postResponse);
         }
 
         return postList;
     }
 
     @Transactional
-    public void createPost(UserDetailsImpl userDetails, PostRequestDto requestDto, MultipartFile file) throws IOException {
+    public void createPost(UserDetailsImpl userDetails, PostRequest requestDto, MultipartFile file) throws IOException {
 
         String email = userDetails.getUsername();
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -80,27 +80,27 @@ public class PostService {
 
     //게시글 수정
     @Transactional
-    public ResponseMessageDto updatePost(PostRequestDto requestDto, Long postId, MultipartFile file) {
+    public ResponseMessage updatePost(PostRequest requestDto, Long postId, MultipartFile file) {
 
-        ResponseMessageDto responseMessageDto = new ResponseMessageDto();
-        responseMessageDto.setStatus(true);
-        responseMessageDto.setMessage("게시글 수정 성공");
-        return responseMessageDto;
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setStatus(true);
+        responseMessage.setMessage("게시글 수정 성공");
+        return responseMessage;
     }
 
 
     //게시글 삭제
-    public ResponseMessageDto deletePost(Long postId) {
+    public ResponseMessage deletePost(Long postId) {
         postRepository.deleteById(postId);
-        ResponseMessageDto responseMessageDto = new ResponseMessageDto();
-        responseMessageDto.setStatus(true);
-        responseMessageDto.setMessage("게시글 삭제 성공");
-        return responseMessageDto;
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setStatus(true);
+        responseMessage.setMessage("게시글 삭제 성공");
+        return responseMessage;
     }
 
     //게시글 상세 페이지 조회
     @Transactional
-    public PostDetailsResponseDto getPost(Long postId, UserDetailsImpl userDetails) {
+    public PostDetailsResponse getPost(Long postId, UserDetailsImpl userDetails) {
 
         //게시글 가져오기
         Post post = postRepository.findById(postId).orElseThrow(
@@ -115,7 +115,7 @@ public class PostService {
 
         User user = userDetails.getUser();
 
-        PostDetailsResponseDto postDetailsResponseDto = PostDetailsResponseDto.builder()
+        PostDetailsResponse postDetailsResponse = PostDetailsResponse.builder()
                 .postId(postId)
                 .title(post.getTitle())
                 .imageURL(imageURL)
@@ -127,7 +127,7 @@ public class PostService {
                 .comments(comments)
                 .build();
 
-        return postDetailsResponseDto;
+        return postDetailsResponse;
 
     }
 
