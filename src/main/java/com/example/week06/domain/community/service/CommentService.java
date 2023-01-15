@@ -1,6 +1,5 @@
 package com.example.week06.domain.community.service;
 
-import com.example.week06.domain.community.dto.CommentRequest;
 import com.example.week06.domain.community.entity.Comment;
 import com.example.week06.domain.community.entity.Post;
 import com.example.week06.domain.user.entity.User;

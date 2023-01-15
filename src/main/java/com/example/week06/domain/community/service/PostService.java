@@ -1,9 +1,8 @@
 package com.example.week06.domain.community.service;
 
-import com.example.week06.domain.community.dto.PostDetailsResponse;
-import com.example.week06.domain.community.dto.PostRequest;
 import com.example.week06.domain.community.dto.PostResponse;
-import com.example.week06.domain.community.dto.ResponseMessage;
+import com.example.week06.domain.community.dto.PostRequest;
+import com.example.week06.domain.community.dto.PostListResponse;
 import com.example.week06.domain.community.entity.Comment;
 import com.example.week06.domain.community.entity.Post;
 import com.example.week06.domain.user.entity.User;
@@ -37,20 +36,20 @@ public class PostService {
 
     //전체 게시글 조회
     @Transactional
-    public List<PostResponse> getPosts() {
+    public List<PostListResponse> getPosts() {
 
         List<Post> posts = postRepository.findAll();
-        List<PostResponse> postList = new ArrayList<>();
+        List<PostListResponse> postList = new ArrayList<>();
 
         for (Post post : posts) {
-            PostResponse postResponse = PostResponse.builder()
+            PostListResponse postListResponse = PostListResponse.builder()
                     .postId(post.getId())
                     .title(post.getTitle())
                     .district(post.getDistrict())
                     .imageURL(attachmentRepository.findByPost(post).getImageURL())
                     .build();
 
-            postList.add(postResponse);
+            postList.add(postListResponse);
         }
 
         return postList;
@@ -100,7 +99,7 @@ public class PostService {
 
     //게시글 상세 페이지 조회
     @Transactional
-    public PostDetailsResponse getPost(Long postId, UserDetailsImpl userDetails) {
+    public PostResponse getPost(Long postId, UserDetailsImpl userDetails) {
 
         //게시글 가져오기
         Post post = postRepository.findById(postId).orElseThrow(
@@ -115,7 +114,7 @@ public class PostService {
 
         User user = userDetails.getUser();
 
-        PostDetailsResponse postDetailsResponse = PostDetailsResponse.builder()
+        PostResponse postResponse = PostResponse.builder()
                 .postId(postId)
                 .title(post.getTitle())
                 .imageURL(imageURL)
@@ -127,7 +126,7 @@ public class PostService {
                 .comments(comments)
                 .build();
 
-        return postDetailsResponse;
+        return postResponse;
 
     }
 

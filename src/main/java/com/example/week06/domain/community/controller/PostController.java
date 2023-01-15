@@ -1,8 +1,8 @@
 package com.example.week06.domain.community.controller;
 
-import com.example.week06.domain.community.dto.PostDetailsResponse;
-import com.example.week06.domain.community.dto.PostRequest;
 import com.example.week06.domain.community.dto.PostResponse;
+import com.example.week06.domain.community.dto.PostRequest;
+import com.example.week06.domain.community.dto.PostListResponse;
 import com.example.week06.global.security.UserDetailsImpl;
 import com.example.week06.domain.community.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class PostController {
 
     //게시판 List 불러오기
     @GetMapping("api/posts")
-    public List<PostResponse> getPosts() {
+    public List<PostListResponse> getPosts() {
 
         return postService.getPosts();
 
@@ -44,8 +44,8 @@ public class PostController {
 
 
     @GetMapping("api/posts/{postId}")
-    public PostDetailsResponse getPost(@PathVariable Long postId,
-                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public PostResponse getPost(@PathVariable Long postId,
+                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return postService.getPost(postId, userDetails);
 

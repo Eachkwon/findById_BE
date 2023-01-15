@@ -4,11 +4,11 @@ import lombok.*;
 
 @Getter
 @Setter
-public class PostRequest {
+public class PostListResponse {
 
+    private Long postId;
     private String title;
-    private String content;
-    private String found_and_lost;
     private String district;
+    private String imageUrl;
 
 }
