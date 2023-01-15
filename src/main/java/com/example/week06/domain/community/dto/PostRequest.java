@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 
-public class PostRequestDto {
+public class PostRequest {
 
     private String title;
     private String content;
@@ -18,8 +18,8 @@ public class PostRequestDto {
 
 
 
-    public PostRequestDto toEntity() {
-        return PostRequestDto.builder()
+    public PostRequest toEntity() {
+        return PostRequest.builder()
                 .title(title)
                 .content(content)
                 .gadaoda(gadaoda)

@@ -1,8 +1,8 @@
 package com.example.week06.domain.community.controller;
 
-import com.example.week06.domain.community.dto.PostDetailsResponseDto;
-import com.example.week06.domain.community.dto.PostRequestDto;
-import com.example.week06.domain.community.dto.PostResponseDto;
+import com.example.week06.domain.community.dto.PostDetailsResponse;
+import com.example.week06.domain.community.dto.PostRequest;
+import com.example.week06.domain.community.dto.PostResponse;
 import com.example.week06.global.security.UserDetailsImpl;
 import com.example.week06.domain.community.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class PostController {
 
     //게시판 List 불러오기
     @GetMapping("api/posts")
-    public List<PostResponseDto> getPosts() {
+    public List<PostResponse> getPosts() {
 
         return postService.getPosts();
 
@@ -31,7 +31,7 @@ public class PostController {
     @PostMapping("api/posts")
     public void createPost(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "postRequestDto") PostRequestDto requestDto,
+            @RequestPart(value = "postRequestDto") PostRequest requestDto,
             @RequestPart(value = "file") MultipartFile file
     ) throws Exception {
 
@@ -44,8 +44,8 @@ public class PostController {
 
 
     @GetMapping("api/posts/{postId}")
-    public PostDetailsResponseDto getPost(@PathVariable Long postId,
-                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public PostDetailsResponse getPost(@PathVariable Long postId,
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return postService.getPost(postId, userDetails);
 

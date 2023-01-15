@@ -5,6 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CommentRequestDto {
-    private String comment;
+public class ResponseMessage {
+    private boolean status;
+    private String message;
+
 }

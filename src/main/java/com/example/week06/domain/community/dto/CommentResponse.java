@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentResponseDto {
+public class CommentResponse {
     private String nickname;
     private String comment;
     private LocalDateTime createdAt;
