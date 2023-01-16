@@ -9,6 +9,5 @@ public class PostListResponse {
     private Long postId;
     private String title;
     private String district;
-    private String imageUrl;
 
 }

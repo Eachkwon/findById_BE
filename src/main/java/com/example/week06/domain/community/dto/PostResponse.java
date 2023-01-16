@@ -12,7 +12,6 @@ public class PostResponse {
 
     private Long postId;
     private String title;
-    private String imageUrl;
     private String nickname;
     private String district;
     private String content;
