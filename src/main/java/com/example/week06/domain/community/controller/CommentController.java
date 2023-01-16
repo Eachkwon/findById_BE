@@ -7,29 +7,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 public class CommentController {
 
     private final CommentService commentService;
 
-
     @PostMapping("/api/posts/{postId}/comments")
-    public void createComment(@RequestBody CommentRequest commentRequest, @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        String email = userDetails.getUsername();
-        commentService.createComment(commentRequest, email, postId);
+    public void createComment(@RequestBody Map<String, String> map, @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        commentService.createComment(map.get("content"), postId, userDetails.getUser());
     }
 
     @DeleteMapping("/api/comments/{commentId}")
     public void deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String email = userDetails.getUsername();
-        commentService.deleteComment(commentId, email);
+        commentService.deleteComment(commentId, userDetails.getUser());
     }
 
     @PutMapping("/api/comments/{commentId}")
-    public void putComment(@PathVariable Long commentId, @RequestBody CommentRequest commentRequest, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        String email = userDetails.getUsername();
-        commentService.putComment(commentId, commentRequest, email);
+    public void putComment(@PathVariable Long commentId, @RequestBody Map<String, String> map, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        commentService.putComment(commentId, map.get("content"), userDetails.getUser());
     }
 
 
