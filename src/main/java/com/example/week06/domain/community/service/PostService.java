@@ -1,21 +1,21 @@
 package com.example.week06.domain.community.service;
 
+import com.example.week06.domain.community.dto.CommentResponse;
 import com.example.week06.domain.community.dto.PostResponse;
 import com.example.week06.domain.community.dto.PostRequest;
 import com.example.week06.domain.community.dto.PostListResponse;
 import com.example.week06.domain.community.entity.Comment;
 import com.example.week06.domain.community.entity.Post;
 import com.example.week06.domain.user.entity.User;
-import com.example.week06.global.AttachmentRepository;
 import com.example.week06.domain.community.repository.CommentRepository;
 import com.example.week06.domain.community.repository.PostRepository;
-import com.example.week06.domain.user.repository.UserRepository;
-import com.example.week06.global.AttachmentService;
 import com.example.week06.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,44 +24,47 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class PostService {
 
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final AttachmentRepository attachmentRepository;
     private final CommentRepository commentRepository;
-    private final AttachmentService attachmentService;
 
+    // 게시판 목록 조회
+    public List<PostListResponse> getPostList(String lost_and_found) {
 
-    //전체 게시글 조회
-    @Transactional
-    public List<PostListResponse> getPosts() {
-
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllByLost_and_foundOrderByCreatedAtDesc(lost_and_found);
         List<PostListResponse> postList = new ArrayList<>();
 
         for (Post post : posts) {
-            PostListResponse postListResponse = PostListResponse.builder()
-                    .postId(post.getId())
-                    .title(post.getTitle())
-                    .district(post.getDistrict())
-                    .imageURL(attachmentRepository.findByPost(post).getImageURL())
-                    .build();
-
+            PostListResponse postListResponse = new PostListResponse(post);
             postList.add(postListResponse);
         }
 
         return postList;
     }
 
-    @Transactional
-    public void createPost(UserDetailsImpl userDetails, PostRequest requestDto, MultipartFile file) throws IOException {
+    //게시글 조회
+    public PostResponse getPost(Long postId) {
 
-        String email = userDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NullPointerException("유저 정보를 찾을 수 없습니다.")
+        //게시글 가져오기
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다.")
         );
+
+        //코멘트 가져오기
+        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+        List<CommentResponse> commentList = new ArrayList<>();
+        for(Comment comment : comments) {
+            CommentResponse commentResponse = new CommentResponse(comment);
+            commentList.add(commentResponse);
+        }
+
+        PostResponse postResponse = new PostResponse(post,commentList);
+        return postResponse;
+    }
+
+    // 게시글 작성
+    public void createPost(UserDetailsImpl userDetails, PostRequest requestDto, MultipartFile file) throws IOException {
 
         //게시글 등록
         String title = requestDto.getTitle();
@@ -77,7 +80,26 @@ public class PostService {
 
     }
 
-    //게시글 수정
+    // 게시글 해결완료
+    public boolean complete(Long postId, UserDetailsImpl userDetails) {
+        Long post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")).getId();
+        String email = userDetails.getUsername();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 아이디입니다.")
+        );
+        Optional<Post> complete = postRepository.findByPostIdAndUser(post, user);
+        if (!complete.isPresent()) {
+            Post completed = new Post(post, user);
+            postRepository.save(completed);
+            return false;
+        } else {
+            postRepository.deleteByPostIdAndUser(post, user);
+            return true;
+        }
+    }
+
+    // 게시글 수정
     @Transactional
     public ResponseMessage updatePost(PostRequest requestDto, Long postId, MultipartFile file) {
 
@@ -95,59 +117,6 @@ public class PostService {
         responseMessage.setStatus(true);
         responseMessage.setMessage("게시글 삭제 성공");
         return responseMessage;
-    }
-
-    //게시글 상세 페이지 조회
-    @Transactional
-    public PostResponse getPost(Long postId, UserDetailsImpl userDetails) {
-
-        //게시글 가져오기
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NullPointerException("게시물이 존재하지 않습니다.")
-        );
-
-        //이미지 가져오기
-        String imageURL = attachmentRepository.findByPost(post).getImageURL();
-
-        //코멘트 가져오기
-        List<Comment> comments = commentRepository.findByPostOrderByCreatedAtDesc(post);
-
-        User user = userDetails.getUser();
-
-        PostResponse postResponse = PostResponse.builder()
-                .postId(postId)
-                .title(post.getTitle())
-                .imageURL(imageURL)
-                .nickname(user.getNickname())
-                .district(post.getDistrict())
-                .content(post.getContent())
-                .gadaoda(post.getGadaoda())
-                .completed(post.getCompleted())
-                .comments(comments)
-                .build();
-
-        return postResponse;
-
-    }
-
-    //완료 처리(completed)
-    @Transactional
-    public boolean complete(Long postId, UserDetailsImpl userDetails) {
-        Long post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")).getId();
-        String email = userDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 아이디입니다.")
-        );
-        Optional<Post> complete = postRepository.findByPostIdAndUser(post, user);
-        if (!complete.isPresent()) {
-            Post completed = new Post(post, user);
-            postRepository.save(completed);
-            return false;
-        } else {
-            postRepository.deleteByPostIdAndUser(post, user);
-            return true;
-        }
     }
 
 }

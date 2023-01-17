@@ -1,5 +1,6 @@
 package com.example.week06.domain.community.dto;
 
+import com.example.week06.domain.community.entity.Comment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +15,10 @@ public class CommentResponse {
     private String content;
     private LocalDateTime createdAt;
 
+    public CommentResponse(Comment comment) {
+        this.commentId = comment.getId();
+        this.nickname = comment.getUser().getNickname();
+        this.content = comment.getContent();
+        this.createdAt = comment.getCreatedAt();
+    }
 }
