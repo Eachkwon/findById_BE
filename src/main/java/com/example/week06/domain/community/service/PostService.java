@@ -27,18 +27,13 @@ public class PostService {
     private final CommentRepository commentRepository;
 
     // 게시판 목록 조회
-    public List<PostListResponse> getPosts() {
+    public List<PostListResponse> getPostList(String lost_and_found) {
 
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllByLost_and_foundContainingOrderByCreatedAtDesc(lost_and_found);
         List<PostListResponse> postList = new ArrayList<>();
 
         for (Post post : posts) {
-            PostListResponse postListResponse = PostListResponse.builder()
-                    .postId(post.getId())
-                    .title(post.getTitle())
-                    .district(post.getDistrict())
-                    .build();
-
+            PostListResponse postListResponse = new PostListResponse(post);
             postList.add(postListResponse);
         }
 
