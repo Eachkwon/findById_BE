@@ -1,5 +1,6 @@
 package com.example.week06.domain.community.service;
 
+import com.example.week06.domain.community.dto.CommentResponse;
 import com.example.week06.domain.community.dto.PostResponse;
 import com.example.week06.domain.community.dto.PostRequest;
 import com.example.week06.domain.community.dto.PostListResponse;
@@ -10,9 +11,11 @@ import com.example.week06.domain.community.repository.CommentRepository;
 import com.example.week06.domain.community.repository.PostRepository;
 import com.example.week06.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ public class PostService {
     // 게시판 목록 조회
     public List<PostListResponse> getPostList(String lost_and_found) {
 
-        List<Post> posts = postRepository.findAllByLost_and_foundContainingOrderByCreatedAtDesc(lost_and_found);
+        List<Post> posts = postRepository.findAllByLost_and_foundOrderByCreatedAtDesc(lost_and_found);
         List<PostListResponse> postList = new ArrayList<>();
 
         for (Post post : posts) {
@@ -41,32 +44,23 @@ public class PostService {
     }
 
     //게시글 조회
-    public PostResponse getPost(Long postId, UserDetailsImpl userDetails) {
+    public PostResponse getPost(Long postId) {
 
         //게시글 가져오기
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NullPointerException("게시물이 존재하지 않습니다.")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다.")
         );
 
         //코멘트 가져오기
-        List<Comment> comments = commentRepository.findByPostOrderByCreatedAtDesc(post);
+        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+        List<CommentResponse> commentList = new ArrayList<>();
+        for(Comment comment : comments) {
+            CommentResponse commentResponse = new CommentResponse(comment);
+            commentList.add(commentResponse);
+        }
 
-        User user = userDetails.getUser();
-
-        PostResponse postResponse = PostResponse.builder()
-                .postId(postId)
-                .title(post.getTitle())
-                .imageURL(imageURL)
-                .nickname(user.getNickname())
-                .district(post.getDistrict())
-                .content(post.getContent())
-                .gadaoda(post.getGadaoda())
-                .completed(post.getCompleted())
-                .comments(comments)
-                .build();
-
+        PostResponse postResponse = new PostResponse(post,commentList);
         return postResponse;
-
     }
 
     // 게시글 작성
