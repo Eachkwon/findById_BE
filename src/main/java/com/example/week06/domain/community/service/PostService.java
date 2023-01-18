@@ -11,13 +11,13 @@ import com.example.week06.domain.community.repository.CommentRepository;
 import com.example.week06.domain.community.repository.PostRepository;
 import com.example.week06.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,49 +64,44 @@ public class PostService {
     }
 
     // 게시글 작성
-    public void createPost(UserDetailsImpl userDetails, PostRequest requestDto, MultipartFile file) throws IOException {
-
-        //게시글 등록
-        String title = requestDto.getTitle();
-        String content = requestDto.getContent();
-        String gadaoda = requestDto.getGadaoda();
-        String district = requestDto.getDistrict();
-        Post post = new Post(title, content, gadaoda, district, user);
-
+    public void createPost(User user, PostRequest postRequest) {
+        Post post = new Post(postRequest, user);
         postRepository.save(post);
-
-        //이미지 등록
-        attachmentService.savePostImage(post, file);
-
     }
 
     // 게시글 해결완료
-    public boolean complete(Long postId, UserDetailsImpl userDetails) {
-        Long post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")).getId();
-        String email = userDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 아이디입니다.")
+    public void complete(Long postId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다.")
         );
-        Optional<Post> complete = postRepository.findByPostIdAndUser(post, user);
-        if (!complete.isPresent()) {
-            Post completed = new Post(post, user);
-            postRepository.save(completed);
-            return false;
-        } else {
-            postRepository.deleteByPostIdAndUser(post, user);
-            return true;
+
+        if(!post.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
         }
+
+        if(post.getCompleted()=="uncompleted") {
+            post.updateCompleted("completed");
+        } else {
+            post.updateCompleted("uncompleted");
+        }
+
+        postRepository.save(post);
     }
 
     // 게시글 수정
     @Transactional
-    public ResponseMessage updatePost(PostRequest requestDto, Long postId, MultipartFile file) {
+    public void updatePost(PostRequest postRequest, Long postId, User user) {
 
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setStatus(true);
-        responseMessage.setMessage("게시글 수정 성공");
-        return responseMessage;
+        Post post = postRepository.findById(postId).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다.")
+        );
+
+        if(!post.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시물 수정 권한이 없습니다.");
+        }
+
+        post.updatePost(postRequest);
+        postRepository.save(post);
     }
 
 
