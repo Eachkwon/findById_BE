@@ -11,6 +11,7 @@ import com.example.week06.domain.community.repository.CommentRepository;
 import com.example.week06.domain.community.repository.PostRepository;
 import com.example.week06.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,22 +70,22 @@ public class PostService {
     }
 
     // 게시글 해결완료
-    public boolean complete(Long postId, UserDetailsImpl userDetails) {
-        Long post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")).getId();
-        String email = userDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 아이디입니다.")
+    public void complete(Long postId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다.")
         );
-        Optional<Post> complete = postRepository.findByPostIdAndUser(post, user);
-        if (!complete.isPresent()) {
-            Post completed = new Post(post, user);
-            postRepository.save(completed);
-            return false;
-        } else {
-            postRepository.deleteByPostIdAndUser(post, user);
-            return true;
+
+        if(!post.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
         }
+
+        if(post.getCompleted()=="uncompleted") {
+            post.updateCompleted("completed");
+        } else {
+            post.updateCompleted("uncompleted");
+        }
+
+        postRepository.save(post);
     }
 
     // 게시글 수정

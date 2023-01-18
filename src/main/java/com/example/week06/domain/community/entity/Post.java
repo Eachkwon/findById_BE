@@ -45,4 +45,8 @@ public class Post extends Timestamped {
         this.district = postRequest.getDistrict();
         this.user = user;
     }
+
+    public void updateCompleted(String completed) {
+        this.completed = completed;
+    }
 }
