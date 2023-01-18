@@ -49,4 +49,11 @@ public class Post extends Timestamped {
     public void updateCompleted(String completed) {
         this.completed = completed;
     }
+
+    public void updatePost(PostRequest postRequest) {
+        this.title = postRequest.getTitle();
+        this.content = postRequest.getContent();
+        this.lost_and_found = postRequest.getFound_and_lost();
+        this.district = postRequest.getDistrict();
+    }
 }

@@ -90,12 +90,18 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public ResponseMessage updatePost(PostRequest requestDto, Long postId, MultipartFile file) {
+    public void updatePost(PostRequest postRequest, Long postId, User user) {
 
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setStatus(true);
-        responseMessage.setMessage("게시글 수정 성공");
-        return responseMessage;
+        Post post = postRepository.findById(postId).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다.")
+        );
+
+        if(!post.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시물 수정 권한이 없습니다.");
+        }
+
+        post.updatePost(postRequest);
+        postRepository.save(post);
     }
 
 
