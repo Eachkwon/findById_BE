@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,20 +63,9 @@ public class PostService {
     }
 
     // 게시글 작성
-    public void createPost(UserDetailsImpl userDetails, PostRequest requestDto, MultipartFile file) throws IOException {
-
-        //게시글 등록
-        String title = requestDto.getTitle();
-        String content = requestDto.getContent();
-        String gadaoda = requestDto.getGadaoda();
-        String district = requestDto.getDistrict();
-        Post post = new Post(title, content, gadaoda, district, user);
-
+    public void createPost(User user, PostRequest postRequest) {
+        Post post = new Post(postRequest, user);
         postRepository.save(post);
-
-        //이미지 등록
-        attachmentService.savePostImage(post, file);
-
     }
 
     // 게시글 해결완료
