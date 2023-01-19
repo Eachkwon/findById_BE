@@ -9,18 +9,14 @@ import com.example.week06.domain.community.entity.Post;
 import com.example.week06.domain.user.entity.User;
 import com.example.week06.domain.community.repository.CommentRepository;
 import com.example.week06.domain.community.repository.PostRepository;
-import com.example.week06.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -104,14 +100,18 @@ public class PostService {
         postRepository.save(post);
     }
 
-
     //게시글 삭제
-    public ResponseMessage deletePost(Long postId) {
-        postRepository.deleteById(postId);
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setStatus(true);
-        responseMessage.setMessage("게시글 삭제 성공");
-        return responseMessage;
+    public void deletePost(Long postId, User user) {
+
+        Post post = postRepository.findById(postId).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다.")
+        );
+
+        if(!post.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시물 삭제 권한이 없습니다.");
+        }
+
+        postRepository.delete(post);
     }
 
 }
