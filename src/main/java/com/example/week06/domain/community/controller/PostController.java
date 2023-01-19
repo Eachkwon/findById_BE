@@ -51,7 +51,7 @@ public class PostController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/api/posts/{postUd}")
+    @DeleteMapping("/api/posts/{postId}")
     public void deletePost(@PathVariable Long postId,
                            @AuthenticationPrincipal UserDetailsImpl userDetails ) {
         postService.deletePost(postId, userDetails.getUser());
