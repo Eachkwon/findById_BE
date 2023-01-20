@@ -43,9 +43,7 @@ public class PostService {
     public PostResponse getPost(Long postId) {
 
         //게시글 가져오기
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다.")
-        );
+        Post post = findPostByPostId(postId);
 
         //코멘트 가져오기
         List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
@@ -55,8 +53,7 @@ public class PostService {
             commentList.add(commentResponse);
         }
 
-        PostResponse postResponse = new PostResponse(post,commentList);
-        return postResponse;
+        return new PostResponse(post,commentList);
     }
 
     // 게시글 작성
@@ -67,15 +64,11 @@ public class PostService {
 
     // 게시글 해결완료
     public void complete(Long postId, User user) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다.")
-        );
+        Post post = findPostByPostId(postId);
 
-        if(!post.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
-        }
+        checkAuthority(post.getUser().getId(), user.getId());
 
-        if(post.getCompleted()=="uncompleted") {
+        if(post.getCompleted().equals("uncompleted")) {
             post.updateCompleted("completed");
         } else {
             post.updateCompleted("uncompleted");
@@ -88,13 +81,9 @@ public class PostService {
     @Transactional
     public void updatePost(PostRequest postRequest, Long postId, User user) {
 
-        Post post = postRepository.findById(postId).orElseThrow(
-                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다.")
-        );
+        Post post = findPostByPostId(postId);
 
-        if(!post.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시물 수정 권한이 없습니다.");
-        }
+        checkAuthority(post.getUser().getId(), user.getId());
 
         post.updatePost(postRequest);
         postRepository.save(post);
@@ -103,15 +92,27 @@ public class PostService {
     //게시글 삭제
     public void deletePost(Long postId, User user) {
 
-        Post post = postRepository.findById(postId).orElseThrow(
-                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다.")
-        );
+        Post post = findPostByPostId(postId);
 
-        if(!post.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시물 삭제 권한이 없습니다.");
-        }
+        checkAuthority(post.getUser().getId(), user.getId());
 
         postRepository.delete(post);
+    }
+
+    // 게시글 반환
+    private Post findPostByPostId(Long postId) {
+
+        return postRepository.findById(postId).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다.")
+        );
+    }
+
+    // 게시글 권한 확인
+    private void checkAuthority(Long writerId, Long userId) {
+
+        if(!writerId.equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시물에 대한 권한이 없습니다.");
+        }
     }
 
 }

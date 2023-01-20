@@ -4,7 +4,7 @@ import com.example.week06.domain.community.dto.PostResponse;
 import com.example.week06.domain.community.dto.PostRequest;
 import com.example.week06.domain.community.dto.PostListResponse;
 import com.example.week06.global.security.UserDetailsImpl;
-import com.example.week06.domain.community.service.PostService;
+import com.example.week06.domain.community.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
