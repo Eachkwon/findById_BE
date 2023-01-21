@@ -1,5 +1,6 @@
-package com.example.week06.global.security;
+package com.example.week06.global.security.provider;
 
+import com.example.week06.global.security.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

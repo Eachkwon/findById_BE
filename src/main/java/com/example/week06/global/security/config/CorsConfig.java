@@ -1,12 +1,14 @@
-package com.example.week06.global.security;
+package com.example.week06.global.security.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
+@Configuration
 public class CorsConfig {
 
     @Bean

@@ -1,4 +1,4 @@
-package com.example.week06.global.security;
+package com.example.week06.global.security.jwt;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

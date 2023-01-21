@@ -1,4 +1,4 @@
-package com.example.week06.global.security;
+package com.example.week06.global.security.filter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
