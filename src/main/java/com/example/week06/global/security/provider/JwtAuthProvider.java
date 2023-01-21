@@ -1,7 +1,10 @@
-package com.example.week06.global.security;
+package com.example.week06.global.security.provider;
 
 import com.example.week06.domain.user.entity.User;
 import com.example.week06.domain.user.repository.UserRepository;
+import com.example.week06.global.security.UserDetailsImpl;
+import com.example.week06.global.security.jwt.JwtDecoder;
+import com.example.week06.global.security.jwt.JwtPreProcessingToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
