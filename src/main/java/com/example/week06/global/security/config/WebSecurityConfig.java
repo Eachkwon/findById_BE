@@ -80,14 +80,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                .antMatchers("/signup").permitAll()
+                .antMatchers("/api/signup").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
                 // [로그아웃 기능]
                 .logout()
                 // 로그아웃 요청 처리 URL
-                .logoutUrl("/logout")
+                .logoutUrl("/api/logout")
                 .permitAll()
                 .and()
                 .exceptionHandling();
@@ -96,7 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public FormLoginFilter formLoginFilter() throws Exception {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager());
-        formLoginFilter.setFilterProcessesUrl("/login");
+        formLoginFilter.setFilterProcessesUrl("/api/login");
         formLoginFilter.setAuthenticationSuccessHandler(formLoginSuccessHandler());
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
@@ -122,11 +122,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/h2-console/**");
         skipPathList.add("POST,/h2-console/**");
         // 회원가입 API 허용
-        skipPathList.add("GET,/signup");
-        skipPathList.add("GET,/user/**");
-        skipPathList.add("POST,/signup");
+        skipPathList.add("GET,/api/signup");
+        skipPathList.add("GET,/api/user/**");
+        skipPathList.add("POST,/api/signup");
         // 로그인 화면 허용
-        skipPathList.add("GET,/login");
+        skipPathList.add("GET,/api/login");
         // 에러 메세지 허용
         skipPathList.add("POST,/error");
         // 프론트 관련 허용
