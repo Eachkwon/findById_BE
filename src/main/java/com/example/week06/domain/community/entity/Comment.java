@@ -1,7 +1,7 @@
 package com.example.week06.domain.community.entity;
 
 
-import com.example.week06.global.Timestamped;
+import com.example.week06.global.common.Timestamped;
 import com.example.week06.domain.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
