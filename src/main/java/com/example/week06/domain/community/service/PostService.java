@@ -57,13 +57,15 @@ public class PostService {
     }
 
     // 게시글 작성
-    public void createPost(User user, PostRequest postRequest) {
+    public String createPost(User user, PostRequest postRequest) {
         Post post = new Post(postRequest, user);
         postRepository.save(post);
+
+        return "게시글 작성을 성공하였습니다.";
     }
 
     // 게시글 해결완료
-    public void complete(Long postId, User user) {
+    public String complete(Long postId, User user) {
         Post post = findPostByPostId(postId);
 
         checkAuthority(post.getUser().getId(), user.getId());
@@ -75,11 +77,13 @@ public class PostService {
         }
 
         postRepository.save(post);
+
+        return "게시글 해결완료를 성공하였습니다.";
     }
 
     // 게시글 수정
     @Transactional
-    public void updatePost(PostRequest postRequest, Long postId, User user) {
+    public String updatePost(PostRequest postRequest, Long postId, User user) {
 
         Post post = findPostByPostId(postId);
 
@@ -87,16 +91,20 @@ public class PostService {
 
         post.updatePost(postRequest);
         postRepository.save(post);
+
+        return "게시글 수정에 성공하였습니다.";
     }
 
     //게시글 삭제
-    public void deletePost(Long postId, User user) {
+    public String deletePost(Long postId, User user) {
 
         Post post = findPostByPostId(postId);
 
         checkAuthority(post.getUser().getId(), user.getId());
 
         postRepository.delete(post);
+
+        return "게시글 삭제에 성공하였습니다.";
     }
 
     // 게시글 반환
