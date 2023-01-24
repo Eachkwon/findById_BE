@@ -16,16 +16,18 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    public void createComment(String content, Long postId, User user){
+    public String createComment(String content, Long postId, User user){
         Post post = postRepository.findById(postId).orElseThrow(
                 ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"존재하지 않는 게시물입니다.")
         );
         Comment comment = new Comment(content, user, post);
 
         commentRepository.save(comment);
+
+        return "댓글 작성에 성공하였습니다.";
     }
 
-    public void deleteComment(Long commentId, User user) {
+    public String deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"댓글이 존재하지 않습니다.")
         );
@@ -35,9 +37,11 @@ public class CommentService {
         }
 
         commentRepository.deleteById(commentId);
+
+        return "댓글 삭제에 성공하였습니다.";
     }
 
-    public void putComment(Long commentId, String content, User user) {
+    public String putComment(Long commentId, String content, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"댓글이 존재하지 않습니다."));
 
@@ -47,6 +51,8 @@ public class CommentService {
 
         comment.update(content);
         commentRepository.save(comment);
+
+        return "댓글 수정에 성공하였습니다.";
     }
 
 }
