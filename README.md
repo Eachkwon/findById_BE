@@ -49,8 +49,3 @@
 <div style="display: flex">
 <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
-
-<br/>
-
-## 기타
-(노션링크 첨부예정)
