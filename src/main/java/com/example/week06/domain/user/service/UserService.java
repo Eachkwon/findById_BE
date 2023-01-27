@@ -16,7 +16,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     //회원가입 요청 처리
-    public void signup(SignupRequest signupRequest){
+    public String signup(SignupRequest signupRequest){
 
         String email = signupRequest.getEmail();
         String nickname = signupRequest.getNickname();
@@ -24,6 +24,8 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(password);
         userRepository.save(new User(email, nickname, encodedPassword));
+
+        return "회원가입 처리에 성공하였습니다.";
     }
 
     //이메일 중복체크
