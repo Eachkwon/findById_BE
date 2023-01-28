@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -20,7 +21,7 @@ public class UserController {
 
     //회원가입 요청 처리
     @PostMapping("/api/signup")
-    public ResponseEntity<?> signup( @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<?> signup( @RequestBody @Valid SignupRequest signupRequest){
         return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK, userService.signup(signupRequest)));
     }
 
