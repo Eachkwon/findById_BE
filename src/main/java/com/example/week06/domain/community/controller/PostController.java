@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 public class PostController {
@@ -33,7 +35,7 @@ public class PostController {
     // 게시글 작성
     @PostMapping("api/posts")
     public ResponseEntity<?> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                           @RequestBody PostRequest postRequest ) {
+                                        @RequestBody @Valid PostRequest postRequest ) {
         return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK,postService.createPost(userDetails.getUser(), postRequest)));
     }
 
@@ -48,7 +50,7 @@ public class PostController {
     @PutMapping("/api/posts/{postId}")
     public ResponseEntity<?> updatePost(@PathVariable Long postId,
                            @AuthenticationPrincipal UserDetailsImpl userDetails,
-                           @RequestBody PostRequest postRequest ) {
+                           @RequestBody @Valid PostRequest postRequest ) {
         return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK, postService.updatePost(postRequest, postId, userDetails.getUser())));
     }
 
